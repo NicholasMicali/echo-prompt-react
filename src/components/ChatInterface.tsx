@@ -10,6 +10,9 @@ interface Message {
   isBot: boolean;
 }
 
+const apiKey = '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'; // import.meta.env.VITE_OPENAI_API_KEY;
+
+
 const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +36,10 @@ const ChatInterface = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4o-mini',
           messages: [
             {
               role: 'system',
@@ -48,7 +51,10 @@ const ChatInterface = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          `API request failed with status ${response.status}: ${errorData.error?.message || 'Unknown error'}`
+        );
       }
 
       const data = await response.json();
