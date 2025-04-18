@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { useToast } from "@/components/ui/use-toast";
+import { School } from 'lucide-react';
 
 interface Message {
   text: string;
@@ -24,7 +25,6 @@ const ChatInterface = () => {
   }, [messages]);
 
   const handleSendMessage = async (message: string) => {
-    // Add user message
     setMessages(prev => [...prev, { text: message, isBot: false }]);
     setIsLoading(true);
 
@@ -37,7 +37,13 @@ const ChatInterface = () => {
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: message }],
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a Boston University expert. Only answer questions related to Boston University, its programs, campus life, history, faculty, research, and student services. If a question is not related to Boston University, politely redirect the user to ask BU-specific questions.'
+            },
+            { role: 'user', content: message }
+          ],
         }),
       });
 
@@ -63,12 +69,15 @@ const ChatInterface = () => {
 
   return (
     <div className="flex flex-col h-screen max-w-3xl mx-auto">
-      <header className="text-center py-8">
-        <h1 className="text-2xl font-semibold text-primary mb-2">AI Chat Assistant</h1>
-        <p className="text-muted-foreground">Ask me anything!</p>
+      <header className="text-center py-8 bg-[#CC0000]">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <School className="text-white" size={24} />
+          <h1 className="text-2xl font-semibold text-white">BU Chat Assistant</h1>
+        </div>
+        <p className="text-white/90">Ask me anything about Boston University!</p>
       </header>
       
-      <div className="flex-1 overflow-y-auto px-4">
+      <div className="flex-1 overflow-y-auto px-4 bg-[#F5F5F5]">
         <div className="space-y-4 pb-4">
           {messages.map((message, index) => (
             <ChatMessage
@@ -79,14 +88,14 @@ const ChatInterface = () => {
           ))}
           {isLoading && (
             <div className="flex justify-center">
-              <div className="animate-pulse text-primary">Processing...</div>
+              <div className="animate-pulse text-[#CC0000]">Processing...</div>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t bg-white">
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
     </div>
