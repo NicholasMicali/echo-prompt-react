@@ -10,7 +10,7 @@ interface Message {
   isBot: boolean;
 }
 
-const apiKey = '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'; // import.meta.env.VITE_OPENAI_API_KEY;
+const apiKey = ''; // import.meta.env.VITE_OPENAI_API_KEY;
 
 
 const ChatInterface = () => {
